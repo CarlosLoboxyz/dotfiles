@@ -1,9 +1,9 @@
-__*Steps to use:*__
+## Steps to use:
 1. Install [home-manager](https://github.com/nix-community/home-manager#installation).
 2. Copy the files inside `.config/nixpkgs` to your pertinent location.
 3. Run `home-manager switch`.
 
-__*Directory overview*__
+## Directory overview:
 ```graphql
 ├── .config
 │   ├── bspwm # WM config dir
