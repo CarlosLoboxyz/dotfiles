@@ -37,6 +37,12 @@
 		fi
 
 		xrdb $HOME/.config/X11/xresources &
+		
+		export XNOTIFY_FIFO="$HOME/.cache/xnotify$DISPLAY.fifo"
+		rm -f $XNOTIFY_FIFO
+		mkfifo $XNOTIFY_FIFO
+		xnotify -b 1 0<>$XNOTIFY_FIFO | sh &
+
 		systemctl --user start picom
 		numlockx on
 
@@ -72,7 +78,7 @@
 		feh.enable = true;
 		tint2 = {
 			enable = true;
-			config = ''
+			settings = ''
 				rounded = 0
 				border_width = 2
 				background_color = #282828 100

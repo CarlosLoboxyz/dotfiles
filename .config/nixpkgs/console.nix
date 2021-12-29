@@ -83,7 +83,6 @@
 			enable = true;
 			config = {
 				color = "always";
-				theme = "gruvbox-dark";
 			};
 		};
 		fzf = {

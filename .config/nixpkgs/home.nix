@@ -25,6 +25,6 @@
 
 	programs = {
 		home-manager.enable = true;
-		home-manager.path = "$HOME/Downloads/home-manager";
+		home-manager.path = "$HOME/Dev/home-manager";
 	};
 }
