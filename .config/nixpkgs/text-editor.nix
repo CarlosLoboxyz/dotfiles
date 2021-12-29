@@ -20,28 +20,54 @@ in
 			vim-nix
 			gruvbox-community
 			vim-commentary
-			vim-indentguides
+			{
+			  plugin = vim-indentguides;
+			  config = "let g:indentguides_tabchar = '│'";
+			}
 			auto-pairs
+			fzf-vim
+			vim-polyglot
+			goyo-vim
+			limelight-vim
+			vim-fugitive
 		];
 		extraConfig = ''
-			set laststatus=0
+			" Options
+			set exrc
+			set number
+			set nowrap
+			set nohlsearch
+			set nobackup
+			set noswapfile
+			set undofile
+			set noshowmode
+			set laststatus=1
 			set showtabline=2
 			set splitbelow
 			set splitright
-			set noswapfile
-			set nobackup
-			set undofile
-			set number
-			set nowrap
+			set colorcolumn=80
+
+			" Indentation using tabs
 			set noexpandtab
-			set copyindent
-			set preserveindent
 			set softtabstop=0
 			set shiftwidth=4
 			set tabstop=4
+			set copyindent
+			set preserveindent
+
+			" Editor theme
 			set termguicolors
 			set background=dark
 			colorscheme gruvbox
+			hi Normal guibg=None ctermbg=None
+
+			" Shift + J/K moves selected lines down/up in visual mode
+			vnoremap J :m '>+1<CR>gv=gv
+			vnoremap K :m '<-2<CR>gv=gv
+
+			" Goyo & Limelight
+			autocmd! User GoyoEnter Limelight
+			autocmd! User GoyoLeave Limelight!
 		'';
 	};
 }

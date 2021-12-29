@@ -5,18 +5,16 @@
 { config, pkgs, ... }:
 
 let
-    myCustomLayout = pkgs.writeText "us-custom" ''
-      xkb_symbols "us-custom"
-      {
-        include "us(basic)"
-        include "level3(ralt_switch)"
-
-        key <LatA> { [ a, A, at ] };
-        key <LatE> { [ e, E, exclam ] };
-      };
-    '';
+	myCustomLayout = pkgs.writeText "us-custom" ''
+		xkb_symbols "us-custom" {
+			include "us(basic)"
+			include "level3(ralt_switch)"
+			key <LatA> { [ a, A, at ] };
+			key <LatE> { [ e, E, exclam ] };
+		};
+	'';
 in
-	
+
 {
 	imports = [ # Include the results of the hardware scan.
 		./hardware-configuration.nix
@@ -30,9 +28,17 @@ in
 		};
 	};
 
+	# Auto garbage collector
+	nix.gc.automatic = true;
+	nix.gc.dates = "03:00";
+
+	# Auto upgrade the system
+	system.autoUpgrade.enable = true;
+	system.autoUpgrade.allowReboot = true;
+	system.autoUpgrade.dates = "04:00";
+
 	environment = { 
 		binsh = "${pkgs.dash}/bin/dash";
-
 		shellAliases = {
 			ls = "ls --color=auto -AhX --group-directories-first";
 			la = "ls --color=auto -AhlX --group-directories-first";
@@ -43,7 +49,6 @@ in
 			df = "df -h";
 			tree = "tree -C";
 		};
-
 		variables = {
 			EDITOR = "nvim"; 
 			VISUAL = "nvim";
@@ -61,7 +66,7 @@ in
 				enable = true;
 				devices = [ "nodev" ];
 				efiSupport = true;
-                                #useOSProber = true;
+				#useOSProber = true;
 			};
 		};
 	};
@@ -95,19 +100,16 @@ in
 	services.xserver = {
 		# Enable the X11 windowing system.
 		enable = true;
-		windowManager.bspwm.enable = true;
-	
 		# Configure keymap in X11
-                extraLayouts.us-custom = {
-                  description = "My custom US layout";
-                  languages = [ "eng" ];
-                  symbolsFile = myCustomLayout;
-                };
+		extraLayouts.us-custom = {
+			description = "My custom US layout";
+			languages = [ "eng" ];
+			symbolsFile = myCustomLayout;
+		};
 		layout = "us-custom";
-		xkbOptions = "caps:swapescape, ctrl:swap_lalt_lctl";
-	
+		xkbOptions = "caps:swapescape, ctrl:swap_lalt_lctl";	
 		displayManager = {
-                        startx.enable = true;
+			startx.enable = true;
 		};
 	}; 
 
@@ -127,7 +129,7 @@ in
 	# services.printing.enable = true;
 
 	# Enable sound.
-  	sound.enable = true;
+	sound.enable = true;
 	hardware = {
 		opengl = {
 			enable = true;
@@ -138,39 +140,38 @@ in
 				libvdpau-va-gl
 			];
 		};
-
 		pulseaudio = {
-			enable = true;	
+			enable = true;
 			# Need by mpd to be able to use Pulseaudio
 			extraConfig = "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
 		};
 	};
 
-  	# Enable touchpad support (enabled default in most desktopManager).
-  	# services.xserver.libinput.enable = true;
-	
-  	# Define a user account. Don't forget to set a password with ‘passwd’.
-        users.extraUsers = {
-          carlos = {
-            shell = pkgs.zsh;
-            isNormalUser = true;
-            extraGroups = [ "wheel" "audio" ];
-          };
-        };
+	# Enable touchpad support (enabled default in most desktopManager).
+	# services.xserver.libinput.enable = true;
+
+	# Define a user account. Don't forget to set a password with ‘passwd’.
+	users.extraUsers = {
+		carlos = {
+			shell = "/home/carlos/.nix-profile/bin/zsh";
+			isNormalUser = true;
+			extraGroups = [ "wheel" "audio" ];
+		};
+	};
+
+	services.getty.autologinUser = "carlos";
 
 	# List packages installed in system profile. To search, run:
 	# $ nix search wget
 	environment.systemPackages = with pkgs; [
 		# Terminal Utilities
 		wget
-		neovim
+		vim
 		htop
-		neofetch
 		unzip
 		unrar
 		tree
 		file
-		ranger
 		# Driver Testing Utilities
 		intel-gpu-tools
 		libva-utils
