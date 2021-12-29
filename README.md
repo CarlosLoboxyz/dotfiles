@@ -1,7 +1,16 @@
 ## Steps to use:
-1. Install [home-manager](https://github.com/nix-community/home-manager#installation).
-2. Copy the files inside `.config/nixpkgs` to your pertinent location.
-3. Run `home-manager switch`.
+1. Clone this repository:
+	`git clone https://github.com/CarlosLoboxyz/dotfiles.git ./dotfiles`
+2. Install [home-manager](https://github.com/nix-community/home-manager#installation).
+3. Create a symlink to your config folders:
+	```shell
+	ln -s ./dotfiles/.config/* ~/.config/
+	ln -s ./dotfiles/.local/bin/ ~/.local/bin
+
+	# Run as root
+	ln -s ./dotfiles/etc/nixos/ /etc/nixos
+	```
+4. Run `home-manager switch`.
 
 ## Directory overview:
 ```graphql
