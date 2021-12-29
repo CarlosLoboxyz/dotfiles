@@ -20,5 +20,8 @@
 │   └── nixos # Nixos configuration dir.
 │       ├── configuration.nix
 │       └── hardware-configuration.nix
+├── .local
+│   └── bin # Scripts folder
+│       └── ...
 └── README.md
 ```
