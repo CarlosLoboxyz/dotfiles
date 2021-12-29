@@ -10,6 +10,10 @@ XF86AudioLowerVolume
 XF86AudioMute
 	amixer set -q Master toggle
 
+# Screenshot
+Print {_,shift,ctrl}
+	~/.local/bin/screenshot.sh {desktop,window,area}
+
 # terminal emulator
 super + Return
 	st
