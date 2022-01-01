@@ -83,6 +83,10 @@
 			extraConfig = {
 				init.defaultBranch = "main";
 			};
+			ignores = [
+				"*.sh"
+				"ani-cli"
+			];
 		};
 		gh = {
 			enable = true;
