@@ -9,7 +9,19 @@
 	home.file.".config/fd/ignore".text = "Music\n.mozilla\n.cache";
 
 	programs = {
-		newsboat.enable = true;
+		direnv = {
+			enable = true;
+			enableZshIntegration = true;
+			#config = {};
+			#nix-direnv.enable = true;
+			#stdlib = true;
+		};
+		newsboat = {
+			enable = true;
+			urls = [
+				{ tags = []; url = "https://lukesmith.xyz/rss.xml"; }
+			];
+		};
 		zsh = {
 			enable = true;
 			autocd = true;
