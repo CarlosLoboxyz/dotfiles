@@ -6,9 +6,9 @@ xrandr --output VGA-1 --primary --mode 1440x900 --rate 75 --pos 0x0 --rotate nor
 export MONITOR=$(xrandr -q | grep primary | cut -d' ' -f1)
 
 # Only have workspaces for primary monitor
-bspc monitor $MONITOR -d I II III IV V
 bspc config remove_disabled_monitors true
 bspc config remove_unplugged_monitors true
+bspc monitor $MONITOR -d I II III IV V
 
 # Monitor And Desktop Settings
 bspc config top_padding 0
