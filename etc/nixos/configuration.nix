@@ -28,6 +28,12 @@ in
 		};
 	};
 
+	# Direnv
+	nix.extraOptions = ''
+		keep-outputs = true
+		keep-derivations = true
+	'';
+
 	# Auto garbage collector
 	nix.gc.automatic = true;
 	nix.gc.dates = "03:00";
