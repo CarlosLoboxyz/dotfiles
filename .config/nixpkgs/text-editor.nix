@@ -54,6 +54,7 @@ in
 			set tabstop=4
 			set copyindent
 			set preserveindent
+			set conceallevel=0
 
 			" Editor theme
 			set termguicolors
