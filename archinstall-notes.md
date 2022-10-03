@@ -7,17 +7,6 @@ Install the following packages to get an unbloated gnome experience
 - gnome-keyring
 - networkmanager
 
-## Xorg Configuration
-Change capslock to escape key:
-```{data-filename="/etc/X11/xorg.conf.d/90-custom-kbd.conf}
-Section "InputClass"
-    Identifier "keyboard defaults"
-    MatchIsKeyboard "on"
-
-    Option "XKbOptions" "caps:escape"
-EndSection
-```
-
 ## Shell Packages
 - bat
 - direnv
@@ -27,3 +16,9 @@ EndSection
 - fzf
 - zsh-completions
 - zsh-theme-powerlevel10k
+
+## Usefull symbolic links
+```bash
+ln -s /usr/bin/nvim /usr/bin/vi # Set alias for neovim
+ln -s /usr/bin/alacritty /usr/bin/xterm # Set alacritty as your default terminal
+```

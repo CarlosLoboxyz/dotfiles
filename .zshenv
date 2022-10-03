@@ -10,6 +10,8 @@ export FZF_DEFAULT_OPTS="--border --info=inline --height=100 --layout=default"
 export FZF_CTRL_T_OPTS="--preview 'bat --line-range :50 {}'"
 export FZF_ALT_C_COMMAND="fd --type d . --color=never --hidden"
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
+export EDITOR="nvim"
+export VISUAL="nvim"
 			
 # Make system functions available to zsh
 () {
