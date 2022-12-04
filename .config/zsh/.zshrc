@@ -78,19 +78,30 @@ fi
 eval "$(/usr/bin/direnv hook zsh)"
 
 # Aliases
-alias -s pdf='zathura'
-alias -s {flac,mp3}='mpv --no-audio-display'
-alias -s {jpg,png}='feh'
 alias ..='cd ..'
 alias cp='cp -riv'
 alias df='df -h'
-alias ip='ip -c=auto'
-alias la='ls --color=auto -AhlX --group-directories-first'
-alias ls='ls --color=auto -AhX --group-directories-first'
 alias mkdir='mkdir -vp'
 alias mv='mv -iv'
 alias sudo='sudo '
+# Files
+alias -s {flac,mp3}='mpv --no-audio-display'
+alias -s {jpg,png}='eog'
+alias -s pdf='evince'
+# Colored output
+alias la='ls --color=auto -AhlX --group-directories-first'
+alias ls='ls --color=auto -AhX --group-directories-first'
+alias grep='grep --color=auto'
+alias ip='ip --colorc=auto'
 alias tree='tree -C'
+# Zsh files
+alias zshrc='$EDITOR $ZDOTDIR/.zshrc'
+alias zprofile='$EDITOR $ZDOTDIR/.zprofile'
+alias zshenv='$EDITOR ~/.zshenv'
+# Copy files
+cpfile() {
+	xclip -selection c < $1
+}
 
 # Global Aliases
 

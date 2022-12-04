@@ -1,9 +1,7 @@
-[credential "https://github.com"]
-	helper = "/nix/store/w8j3ir8bmxq76sl2wmcgvsa4z22ivyig-gh-2.16.1/bin/gh auth git-credential"
-
 [init]
 	defaultBranch = "main"
-
 [user]
 	email = "86011416+CarlosLoboxyz@users.noreply.github.com"
 	name = "Carlos Lobo"
+[core]
+	autocrlf = input

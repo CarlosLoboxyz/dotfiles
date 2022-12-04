@@ -1,5 +1,5 @@
 ## Setup Arch Linux with Gnome
-Install the following packages to get an unbloated gnome experience
+Install the following packages to get an debloated gnome experience
 - gnome-shell
 - gnome-tweak-tool
 - gnome-control-center
@@ -17,8 +17,25 @@ Install the following packages to get an unbloated gnome experience
 - zsh-completions
 - zsh-theme-powerlevel10k
 
-## Usefull symbolic links
+## Useful symbolic links
 ```bash
 ln -s /usr/bin/nvim /usr/bin/vi # Set alias for neovim
-ln -s /usr/bin/alacritty /usr/bin/xterm # Set alacritty as your default terminal
+ln -s /usr/bin/kitty /usr/bin/xterm # Set kitty as your default terminal
 ```
+
+## Writing Document Setup
+- texlive-core
+- texlive-latexextra
+- pandoc
+- r
+
+## Useful tools
+bind-tools
+aircrack-ng
+wordlists
+burpsuite
+xclip
+as-tree
+
+# Terminal
+nerd-fonts-jetbrains-mono

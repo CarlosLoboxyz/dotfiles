@@ -12,7 +12,7 @@ export FZF_ALT_C_COMMAND="fd --type d . --color=never --hidden"
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
 export EDITOR="nvim"
 export VISUAL="nvim"
-			
+
 # Make system functions available to zsh
 () {
   setopt LOCAL_OPTIONS CASE_GLOB EXTENDED_GLOB
