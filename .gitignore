@@ -1,0 +1,8 @@
+.config/nvim/undodir/
+.config/nvim/plugin/packer_compiled.lua
+.config/zsh/.histfile
+.config/zsh/.p10k.zsh
+.config/zsh/.zcompdump
+.config/mpd/database
+.config/ncmpcpp/lyrics/
+.config/ncmpcpp/error.log
