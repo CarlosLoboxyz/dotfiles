@@ -444,8 +444,8 @@ def_key "J"
 #def_key "g"
 #  jump_to_position_in_song
 #
-#def_key "l"
-#  show_lyrics
+def_key "L"
+  show_lyrics
 #
 #def_key "ctrl-v"
 #  select_range
@@ -522,8 +522,8 @@ def_key "J"
 #def_key "!"
 #  toggle_separators_between_albums
 #
-#def_key "L"
-#  toggle_lyrics_fetcher
+def_key "alt-L"
+  toggle_lyrics_fetcher
 #
 #def_key "F"
 #  fetch_lyrics_in_background

@@ -1,0 +1,21 @@
+[$Version]
+update_info=kwinrules.upd:replace-placement-string-to-enum,kwinrules.upd:use-virtual-desktop-ids
+
+[1]
+Description=floating-kitty
+placementrule=2
+types=1
+wmclass=kitty floating-kitty
+wmclasscomplete=true
+wmclassmatch=1
+
+[General]
+count=1
+rules=1
+
+[a7930a24-441b-4503-bd67-cb75150639c9]
+Description=floating kitty
+placementrule=2
+size=500,500
+sizerule=3
+wmclassmatch=1

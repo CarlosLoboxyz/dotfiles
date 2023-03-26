@@ -16,6 +16,7 @@ autocenter_mode = yes
 centered_cursor = no
 user_interface = classic
 follow_now_playing_lyrics = yes
+fetch_lyrics_for_current_song_in_background = yes
 display_bitrate = no
 external_editor = nvim
 progressbar_elapsed_color = white
