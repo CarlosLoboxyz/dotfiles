@@ -1,213 +1,292 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
-let
-	myCustomLayout = pkgs.writeText "us-custom" ''
-		xkb_symbols "us-custom" {
-			include "us(basic)"
-			include "level3(ralt_switch)"
-			key <LatA> { [ a, A, at ] };
-			key <LatE> { [ e, E, exclam ] };
-		};
-	'';
-in
-
 {
-	imports = [ # Include the results of the hardware scan.
+	imports = [ 
+		# Include the results of the hardware scan.
+		<nixos-hardware/lenovo/thinkpad/t480>
 		./hardware-configuration.nix
+		<home-manager/nixos>
+		./nvim.nix
+		./tmux.nix
 	];
+	nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-	nixpkgs = {
-		config = {
-			allowUnfree = true;
-			# License stuff
-			joypixels.acceptLicense = true;
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # Use latest kernel.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  hardware.i2c.enable = true;
+
+  networking.hostName = "chicot"; # Define your hostname.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+  # Set your time zone.
+  time.timeZone = "America/Caracas";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "es_VE.UTF-8";
+    LC_IDENTIFICATION = "es_VE.UTF-8";
+    LC_MEASUREMENT = "es_VE.UTF-8";
+    LC_MONETARY = "es_VE.UTF-8";
+    LC_NAME = "es_VE.UTF-8";
+    LC_NUMERIC = "es_VE.UTF-8";
+    LC_PAPER = "es_VE.UTF-8";
+    LC_TELEPHONE = "es_VE.UTF-8";
+    LC_TIME = "es_VE.UTF-8";
+  };
+
+  # Enable the X11 windowing system.
+  services.xserver = {
+  	enable = true;
+		xkb = {
+			layout = "us";
+			variant = "altgr-intl";
+			options = "caps:swapescape";
 		};
-	};
+		excludePackages = [ pkgs.xterm ];
+  };
 
-	# Direnv
-	nix.extraOptions = ''
-		keep-outputs = true
-		keep-derivations = true
-	'';
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  services.udev.packages = [ pkgs.gnome-settings-daemon ];
 
-	# Auto garbage collector
-	nix.gc.automatic = true;
-	nix.gc.dates = "03:00";
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
-	# Auto upgrade the system
-	system.autoUpgrade.enable = true;
-	system.autoUpgrade.allowReboot = true;
-	system.autoUpgrade.dates = "04:00";
+  # Enable sound with pipewire.
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
 
-	environment = { 
-		binsh = "${pkgs.dash}/bin/dash";
-		shellAliases = {
-			ls = "ls --color=auto -AhX --group-directories-first";
-			la = "ls --color=auto -AhlX --group-directories-first";
-			ip = "ip -c=auto";
-			mv = "mv -iv";
-			cp = "cp -riv";
-			mkdir = "mkdir -vp";
-			df = "df -h";
-			tree = "tree -C";
+  home-manager.useUserPackages = true;
+  home-manager.users.carlos = { pkgs, ... }: {
+	  home.stateVersion = "25.05";
+	  programs.kitty = {
+		  enable = true;
+		  themeFile = "gruvbox-dark-hard";
+		  settings = {
+			  font_family = "JetBrains Mono Nerd Font";
+			  font_size = 10;
+			  enable_audio_bell = false;
+			  window_padding_width = "5 5 5 5";
+			  background_opacity = "0.90";
+			  confirm_os_window_close = 0;
+			  hide_window_decorations = true;
+		  };
+	  };
+		programs.fzf = {
+			enable = true;
+			enableZshIntegration = true;
 		};
-		variables = {
-			EDITOR = "nvim"; 
-			VISUAL = "nvim";
-		};
-	};
-
-	# Use the systemd-boot EFI boot loader.
-	# boot.loader.systemd-boot.enable = true;
-	# boot.loader.grub.version = 2;
-	boot = {
-		kernelPackages = pkgs.linuxPackages_zen;
-		loader = {
-			efi.canTouchEfiVariables = true;
-			grub = {
-				enable = true;
-				devices = [ "nodev" ];
-				efiSupport = true;
-				#useOSProber = true;
+	  programs.zsh = {
+	  	enable = true;
+			dotDir = ".config/zsh";
+			defaultKeymap = "viins";
+			setOptions = [
+				"AUTO_CD"             # Go to folder path without using cd.
+				"AUTO_PUSHD"          # Push the old directory onto the stack on cd.
+				"PUSHD_IGNORE_DUPS"   # Do not store duplicates in the stack.
+				"PUSHD_SILENT"        # Do not print the directory stack after pushd or popd.
+				"CORRECT"             # Spelling correction
+				"CDABLE_VARS"         # Change directory to a path stored in a variable.
+				"EXTENDED_GLOB"       # Use extended globbing syntax.
+			];
+			history = {
+				expireDuplicatesFirst = true;
+				ignoreDups = true;
+				ignoreSpace = true;
+				save = 1000000;
+				share = true;
+			};
+			plugins = [
+				{
+					name = "powerlevel10k";
+					src = pkgs.zsh-powerlevel10k;
+					file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+				}
+			];
+			initContent = ''
+				source ~/.config/zsh/.p10k.zsh
+				alias d='dirs -v'
+				for index ({0..9}) alias "''$index"="cd +''${index}"; unset index
+			'';
+			shellAliases = {
+				".." = "cd ..";
+				cp = "cp -riv";
+				df = "df -h";
+				mkdir = "mkdir -vp";
+				mv = "mv -iv";
+				ls = "ls --color=auto -GAhX --group-directories-first";
+				la = "ls --color=auto -hX --group-directories-first";
+				grep = "grep --color=auto";
+				ip = "ip -c=auto";
+				httpserver = "python -m http.server 8000";
+				music = "ncmpcpp";
+				duh = "du -h --max-depth=1 | sort -h -r";
+				mail = "neomutt";
+				dc = "docker compose";
 			};
 		};
-	};
-
-	networking.hostName = "nixos"; # Define your hostname.
-	#networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-	
-	# Set your time zone.
-	time.timeZone = "America/Caracas";
-	
-	# The global useDHCP flag is deprecated, therefore explicitly set to false here.
-	# Per-interface useDHCP will be mandatory in the future, so this generated config
-	# replicates the default behaviour.
-	networking.useDHCP = false;
-	networking.interfaces.enp3s0f2.useDHCP = true;
-	networking.interfaces.wlp2s0.useDHCP = true;
-	
-	# Configure network proxy if necessary
-	# networking.proxy.default = "http://user:password@proxy:port/";
-	# networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-	# Select internationalisation properties.
-	i18n.defaultLocale = "en_US.UTF-8";
-	console = {
-		useXkbConfig = true;
-		font = "Lat2-Terminus16";
-		#KeyMap = "us";
-	};
-
-	# Enable bspwm Desktop Environment.
-	services.xserver = {
-		# Enable the X11 windowing system.
-		enable = true;
-		# Configure keymap in X11
-		extraLayouts.us-custom = {
-			description = "My custom US layout";
-			languages = [ "eng" ];
-			symbolsFile = myCustomLayout;
-		};
-		layout = "us-custom";
-		xkbOptions = "caps:swapescape, ctrl:swap_lalt_lctl";	
-		displayManager = {
-			startx.enable = true;
-		};
-	}; 
-
-
-	fonts = {
-		fonts = with pkgs; [
-			# Chinese, Japanese, Korean fonts 
-			noto-fonts-cjk
-			# Emoji font
-			joypixels
-			# My favorite font
-			(nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-		];
-	};
-
-	# Enable CUPS to print documents.
-	# services.printing.enable = true;
-
-	# Enable sound.
-	sound.enable = true;
-	hardware = {
-		opengl = {
+		programs.git = {
 			enable = true;
-			extraPackages = with pkgs; [
-				intel-media-driver
-				vaapiIntel
-				vaapiVdpau
-				libvdpau-va-gl
-			];
+			userName = "Carlos Lobo";
+			userEmail = "86011416+CarlosLoboxyz@users.noreply.github.com";
+			extraConfig = {
+				init.defaultBranch = "master";
+			};
 		};
-		pulseaudio = {
-			enable = true;
-			# Need by mpd to be able to use Pulseaudio
-			extraConfig = "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
+  };
+	
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.carlos = {
+    isNormalUser = true;
+    description = "carlos";
+    shell = "/etc/profiles/per-user/carlos/bin/zsh";
+    extraGroups = [ "networkmanager" "wheel" "video" "i2c" ];
+    packages = with pkgs; [
+    #  thunderbird
+    ];
+  };
+
+  # Enable automatic login for the user.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "carlos";
+
+  # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
+
+  # Install firefox.
+  programs.firefox.enable = true;
+
+  # Steam
+  programs.steam.enable = true;
+  programs.steam.gamescopeSession.enable = true;
+  programs.gamemode.enable = true;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment = {
+  	variables = {
+			EDITOR = "nvim";
+			VISUAL = "nvim";
 		};
-	};
+  };
 
-	# Enable touchpad support (enabled default in most desktopManager).
-	# services.xserver.libinput.enable = true;
-
-	# Define a user account. Don't forget to set a password with ‘passwd’.
-	users.extraUsers = {
-		carlos = {
-			shell = "/home/carlos/.nix-profile/bin/zsh";
-			isNormalUser = true;
-			extraGroups = [ "wheel" "audio" ];
-		};
-	};
-
-	services.getty.autologinUser = "carlos";
-
-	# List packages installed in system profile. To search, run:
-	# $ nix search wget
-	environment.systemPackages = with pkgs; [
-		# Terminal Utilities
-		wget
-		vim
-		htop
-		unzip
-		unrar
-		tree
-		file
-		# Driver Testing Utilities
-		intel-gpu-tools
-		libva-utils
-		vdpauinfo
+	# OBS virtual camera
+	boot.extraModulePackages = with config.boot.kernelPackages; [
+		v4l2loopback
 	];
+	boot.extraModprobeConfig = ''
+		options v4l2loopback devices=1 video_nr=1 card_label="OBS Virtual Cam" exclusive_caps=1
+	'';
+	security.polkit.enable = true;
 
-	# Some programs need SUID wrappers, can be configured further or are
-	# started in user sessions.
-	# programs.mtr.enable = true;
-	# programs.gnupg.agent = {
-	#   enable = true;
-	#   enableSSHSupport = true;
-	# };
+  environment.systemPackages = with pkgs; [
+		(pkgs.wrapOBS {
+			plugins = with pkgs.obs-studio-plugins; [
+				wlrobs
+				obs-backgroundremoval
+				obs-pipewire-audio-capture
+			];
+		})
+		intel-media-sdk
+		nmap
+		obsidian
+		neovim
+		gnomeExtensions.appindicator
+		gnome-pomodoro
+		wl-clipboard
+		htop
+		ferdium
+		ddcutil
+		gnome-tweaks
+		dconf
+		dconf-editor
+		mangohud
+		keepassxc
+		moonlight-qt
+		libreoffice-qt
+  ];
 
-	##List services that you want to enable:
-	
-	# Enable the OpenSSH daemon.
-	# services.openssh.enable = true;
-	
-	# Open ports in the firewall.
-	# networking.firewall.allowedTCPPorts = [ ... ];
-	# networking.firewall.allowedUDPPorts = [ ... ];
-	# Or disable the firewall altogether.
-	# networking.firewall.enable = false;
-	
-	# This value determines the NixOS release from which the default
-	# settings for stateful data, like file locations and database versions
-	# on your system were taken. It‘s perfectly fine and recommended to leave
-	# this value at the release version of the first install of this system.
-	# Before changing this value read the documentation for this option
-	# (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-	system.stateVersion = "21.05"; # Did you read the comment?
+  environment.gnome.excludePackages = (with pkgs; [
+  	gnome-music
+		gnome-tour
+		gnome-characters
+		gnome-text-editor
+		gnome-maps
+		yelp
+		geary
+		gedit
+		epiphany
+	]);
+
+  fonts.packages = with pkgs; [
+  	nerd-fonts.jetbrains-mono
+		noto-fonts
+		noto-fonts-cjk-sans
+  ];
+
+  virtualisation.docker.rootless = {
+		enable = true;
+		setSocketVariable = true;
+  };
+
+	security.wrappers = {
+		docker-rootlesskit = {
+			owner = "root";
+			group = "root";
+			capabilities = "cap_net_bind_service+ep";
+			source = "${pkgs.rootlesskit}/bin/rootlesskit";
+		};
+	};
+
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
+
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "25.05"; # Did you read the comment?
 }
