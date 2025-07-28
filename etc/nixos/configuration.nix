@@ -125,6 +125,7 @@
 				}
 			];
 			initContent = ''
+				path+=''$HOME/.local/share/scripts
 				source ~/.config/zsh/.p10k.zsh
 				alias d='dirs -v'
 				for index ({0..9}) alias "''$index"="cd +''${index}"; unset index
@@ -154,8 +155,17 @@
 				init.defaultBranch = "master";
 			};
 		};
+		xdg.dataFile."scripts/odoo-scaffold" = {
+			enable = true;
+			executable = true;
+			text = ''
+				#!/bin/sh
+				docker compose exec odoo odoo scaffold $1 /tmp
+				docker compose cp odoo:/tmp/$1 $2
+			'';
+		};
   };
-	
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.carlos = {
     isNormalUser = true;
@@ -216,19 +226,22 @@
 		nmap
 		obsidian
 		neovim
-		gnomeExtensions.appindicator
 		gnome-pomodoro
 		wl-clipboard
 		htop
 		ferdium
 		ddcutil
-		gnome-tweaks
-		dconf
-		dconf-editor
 		mangohud
 		keepassxc
 		moonlight-qt
 		libreoffice-qt
+		# Gnome
+		gnomeExtensions.advanced-alttab-window-switcher
+		gnomeExtensions.night-theme-switcher
+		gnomeExtensions.appindicator
+		gnome-tweaks
+		dconf
+		dconf-editor
   ];
 
   environment.gnome.excludePackages = (with pkgs; [
