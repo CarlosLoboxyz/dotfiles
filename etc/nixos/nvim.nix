@@ -15,6 +15,7 @@
 				gitsigns-nvim
 				telescope-nvim
 				mini-pairs
+				mini-snippets
 				# Completion
 				nvim-cmp
 				cmp-nvim-lsp
@@ -26,7 +27,7 @@
 				# LSP:
 				nvim-lspconfig
 				# TreeSitter:
-				nvim-treesitter
+				nvim-treesitter.withAllGrammars
 			];
 			extraPackages = with pkgs; [
 				gcc
@@ -224,6 +225,62 @@
 			return {
 				{ "neovim/nvim-lspconfig" },
 			}
+		'';
+
+		xdg.configFile."nvim/lua/plugins/minisnippets.lua".text = ''
+			return {
+				"echasnovski/mini.snippets",
+				version = false, -- or specify a tag/release if you prefer
+				event = "VeryLazy",
+				config = function()
+					local gen_loader = require("mini.snippets").gen_loader
+					require("mini.snippets").setup({
+						snippets = {
+							-- Load custom file with global snippets first
+							gen_loader.from_file(vim.fn.expand("~/.config/nvim/snippets/global.json")),
+
+							-- Load snippets based on current language by reading files from
+							-- "snippets/" subdirectories from "runtimepath" directories.
+							gen_loader.from_lang(),
+						},
+					})
+				end,
+			}
+		'';
+
+		xdg.configFile."nvim/snippets/global.json".text = ''
+		{
+			"Basic":        { "prefix": "ba", "body": "T1=''$1 T2=''$2 T0=$0"         },
+				"Placeholders": { "prefix": "pl", "body": "T1=''${1:aa}\nT2=''${2:<$1>}"  },
+				"Choices":      { "prefix": "ch", "body": "T1=''${1|a,b|} T2=''${2|c,d|}" },
+				"Linked":       { "prefix": "li", "body": "T1=$1\n\tT1=$1"            },
+				"Variables":    { "prefix": "va", "body": "Runtime: $VIMRUNTIME\n"    },
+				"Complex":      {
+					"prefix": "co",
+					"body": [ "T1=''${1:$RANDOM}", "T3=''${3:''$1_''${2:''$1}}", "T2=''$2" ]
+				}
+		}
+		'';
+
+		xdg.configFile."nvim/snippets/xml.json".text = ''	
+		{	
+		"ViewInherit": {
+			"prefix": "view",
+			"body": [
+"<odoo>",
+"\t<record id=\"''$1\" model=\"ir.ui.view\">",
+"\t\t<field name=\"name\">''$2</field>",
+"\t\t<field name=\"model\">''$3</field>",
+"\t\t<field name=\"inherit_id\" ref=\"''$4\"/>",
+"\t\t<field name=\"arch\" type=\"xml\">",
+"\t\t\t<xpath expr=\"''$5\" position=\"''$6\">",
+"\t\t\t</xpath>",
+"\t\t</field>",
+"\t</record>",
+"</odoo>"
+			]
+		}
+		}
 		'';
 
 		xdg.configFile."nvim/lua/plugins/minipairs.lua".text = ''

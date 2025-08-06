@@ -66,6 +66,18 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+	services.printing.drivers = [ pkgs.epson-escpr ];
+
+	# autodetect printers
+	services.avahi = {
+		enable = true;
+		nssmdns4 = true;
+		openFirewall = true;
+	};
+
+	services.gvfs.enable = true;
+
+	services.tailscale.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -93,6 +105,9 @@
 			  hide_window_decorations = true;
 		  };
 	  };
+		programs.neomutt = {
+			enable = true;
+		};
 		programs.fzf = {
 			enable = true;
 			enableZshIntegration = true;
@@ -171,7 +186,7 @@
     isNormalUser = true;
     description = "carlos";
     shell = "/etc/profiles/per-user/carlos/bin/zsh";
-    extraGroups = [ "networkmanager" "wheel" "video" "i2c" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "i2c" "libvirtd" ];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -199,6 +214,9 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment = {
+		sessionVariables = {
+			NIXOS_OZONE_WL = "1";
+		};
   	variables = {
 			EDITOR = "nvim";
 			VISUAL = "nvim";
@@ -222,11 +240,12 @@
 				obs-pipewire-audio-capture
 			];
 		})
+		imagemagickBig
+		tldr
 		intel-media-sdk
 		nmap
 		obsidian
 		neovim
-		gnome-pomodoro
 		wl-clipboard
 		htop
 		ferdium
@@ -235,10 +254,20 @@
 		keepassxc
 		moonlight-qt
 		libreoffice-qt
+		picard # musicbrainz (music-tag editor)
+		unrar
+		mpv
+		supersonic # navidrone client
+		read-edid
 		# Gnome
-		gnomeExtensions.advanced-alttab-window-switcher
+		gnomeExtensions.advanced-alttab-window-switcher	
 		gnomeExtensions.night-theme-switcher
 		gnomeExtensions.appindicator
+		gnomeExtensions.caffeine
+		gnomeExtensions.tailscale-qs
+		# gnomeExtensions.quick-settings-tweaker
+		gnome-decoder
+		gnome-pomodoro
 		gnome-tweaks
 		dconf
 		dconf-editor
@@ -266,6 +295,27 @@
 		enable = true;
 		setSocketVariable = true;
   };
+
+	programs.virt-manager.enable = true;
+
+	virtualisation.spiceUSBRedirection.enable = true;
+	# services.spice-webdavd.enable = true;
+
+	virtualisation.libvirtd = {
+		enable = true;
+		qemu = {
+			package = pkgs.qemu_kvm;
+			runAsRoot = true;
+			swtpm.enable = true;
+			ovmf = {
+				enable = true;
+				packages = [(pkgs.OVMF.override {
+					secureBoot = true;
+					tpmSupport = true;
+				}).fd];
+			};
+		};
+	};
 
 	security.wrappers = {
 		docker-rootlesskit = {
