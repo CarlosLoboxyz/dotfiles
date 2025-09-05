@@ -4,6 +4,7 @@
 	home-manager.users.carlos = { pkgs, ... }: {
 		programs.tmux = {
 			enable = true;
+			tmuxp.enable = true;
 			extraConfig = ''
 				# Set terminal colors
 				set-option -sa terminal-overrides ",xterm*:Tc"
@@ -125,6 +126,16 @@
 				# Scrollback limit
 				set-option -g history-limit 100000
 				'';
+		};
+		xdg.configFile."tmux/scripts/launcher.sh" = {
+			text = ''
+				 #!/bin/sh
+
+				OPTS="$(tmuxp ls)"
+				LIST="$(awk '{print $1, NR, "\"run '\'''tmuxp load -y", $1 "'\'''\""}' <<< $OPTS)"
+				xargs tmux display-menu -T "Load session" <<< $LIST
+			'';
+			executable = true;
 		};
 		xdg.configFile."tmux/colorschemes/gruvbox.conf".text = ''
 			### theme settings ###

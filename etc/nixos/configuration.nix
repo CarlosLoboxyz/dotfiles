@@ -66,7 +66,12 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-	services.printing.drivers = [ pkgs.epson-escpr ];
+	services.printing.drivers = with pkgs; [ 
+		epson-escpr
+		hplip	
+	];
+
+	services.hardware.openrgb.enable = true;
 
 	# autodetect printers
 	services.avahi = {
@@ -144,6 +149,7 @@
 				source ~/.config/zsh/.p10k.zsh
 				alias d='dirs -v'
 				for index ({0..9}) alias "''$index"="cd +''${index}"; unset index
+				eval "$(direnv hook zsh)"
 			'';
 			shellAliases = {
 				".." = "cd ..";
@@ -170,6 +176,9 @@
 				init.defaultBranch = "master";
 			};
 		};
+		programs.lazygit = {
+			enable = true;
+		};
 		xdg.dataFile."scripts/odoo-scaffold" = {
 			enable = true;
 			executable = true;
@@ -186,7 +195,7 @@
     isNormalUser = true;
     description = "carlos";
     shell = "/etc/profiles/per-user/carlos/bin/zsh";
-    extraGroups = [ "networkmanager" "wheel" "video" "i2c" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "i2c" "libvirtd" "adbusers" ];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -201,12 +210,20 @@
   systemd.services."autovt@tty1".enable = false;
 
   # Install firefox.
-  programs.firefox.enable = true;
+  programs.firefox = {
+		enable = true;
+		preferences = {
+			"widget.use-xdg-desktop-portal.file-picker" = 1;
+			"browser.toolbars.bookmarks.visibility" = "newtab";
+		};
+	};
 
   # Steam
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
+
+	programs.adb.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -228,7 +245,7 @@
 		v4l2loopback
 	];
 	boot.extraModprobeConfig = ''
-		options v4l2loopback devices=1 video_nr=1 card_label="OBS Virtual Cam" exclusive_caps=1
+		options v4l2loopback devices=0 video_nr=0 card_label="OBS Virtual Cam" exclusive_caps=1
 	'';
 	security.polkit.enable = true;
 
@@ -240,25 +257,37 @@
 				obs-pipewire-audio-capture
 			];
 		})
+		youtube-music
+		blender
+		ardour
+		insomnia
+		ripgrep
+		compose2nix
+		lazygit
+		qpwgraph # pipewire gui tool
+		# aseprite # pixel art
+		godot # game dev
+		gimp3
 		imagemagickBig
 		tldr
-		intel-media-sdk
-		nmap
+		nmap # network
 		obsidian
 		neovim
 		wl-clipboard
 		htop
 		ferdium
 		ddcutil
+		v4l-utils
 		mangohud
 		keepassxc
 		moonlight-qt
 		libreoffice-qt
-		picard # musicbrainz (music-tag editor)
 		unrar
 		mpv
-		supersonic # navidrone client
 		read-edid
+		ffmpeg-full
+		picard # musicbrainz (music-tag editor)
+		supersonic # navidrone client
 		# Gnome
 		gnomeExtensions.advanced-alttab-window-switcher	
 		gnomeExtensions.night-theme-switcher
@@ -266,6 +295,7 @@
 		gnomeExtensions.caffeine
 		gnomeExtensions.tailscale-qs
 		# gnomeExtensions.quick-settings-tweaker
+		xdg-desktop-portal-gnome
 		gnome-decoder
 		gnome-pomodoro
 		gnome-tweaks
@@ -297,6 +327,15 @@
   };
 
 	programs.virt-manager.enable = true;
+
+	programs.direnv = {
+		enable = true;
+		settings = {
+			global = {
+				log_filter = "^loading";
+			};
+		};
+	};
 
 	virtualisation.spiceUSBRedirection.enable = true;
 	# services.spice-webdavd.enable = true;
@@ -338,6 +377,7 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+	programs.ssh.enableAskPassword = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

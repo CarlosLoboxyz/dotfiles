@@ -16,6 +16,7 @@
 				telescope-nvim
 				mini-pairs
 				mini-snippets
+				trouble-nvim
 				# Completion
 				nvim-cmp
 				cmp-nvim-lsp
@@ -35,6 +36,11 @@
 				stylua
 				black
 				prettierd
+				gopls
+				golines
+				gotools
+				gosimports
+				golangci-lint
 				python313Packages.jedi-language-server
 			];
 			extraLuaConfig = ''
@@ -91,7 +97,9 @@
 				lspconfig_defaults.capabilities = vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, require("cmp_nvim_lsp").default_capabilities())
 	
 				local lspconfig = require("lspconfig")
+				-- Load language servers
 				lspconfig.jedi_language_server.setup({})
+				lspconfig.gopls.setup({})
 
 				local cmp = require("cmp")
 				cmp.setup({
@@ -120,6 +128,16 @@
 				config = function(_, opts)
 					require("gruvbox").setup(opts)
 					vim.cmd("colorscheme gruvbox")
+				end
+			}
+		'';
+
+		xdg.configFile."nvim/lua/plugins/trouble-nvim.lua".text = ''
+			return {
+				"folke/trouble.nvim",
+
+				config = function()
+					require("trouble").setup({})
 				end
 			}
 		'';
@@ -365,7 +383,7 @@
 
 						configs.setup({
 								ensure_installed = {},
-								-- ensure_installed = { "c", "lua", "vim", "vimdoc", "javascript", "python", "html", "css" },
+								-- ensure_installed = { "c", "lua", "vim", "vimdoc", "javascript", "python", "html", "css", "go" },
 								sync_install = false,
 								highlight = { enable = true },
 								indent = { enable = true },
