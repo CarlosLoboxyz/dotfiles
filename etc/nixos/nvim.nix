@@ -106,7 +106,9 @@
 					sources = {
 						{ name = "nvim_lsp" },
 					},
-					mapping = cmp.mapping.preset.insert({}),
+					mapping = cmp.mapping.preset.insert({
+						['<CR>'] = cmp.mapping.confirm({ select = true }),
+					}),
 					snippet = {
 						expand = function(args)
 							vim.snippet.expand(args.body)
@@ -137,7 +139,24 @@
 				"folke/trouble.nvim",
 
 				config = function()
-					require("trouble").setup({})
+					require("trouble").setup({
+						use_diagnostic_signs = true
+					})
+
+					vim.diagnostic.config({
+						virtual_text = {
+							prefix = '●', -- Could be '■', '▶', etc.
+							spacing = 2,
+							severity = { min = vim.diagnostic.severity.ERROR }
+						},
+						signs = true,
+						underline = true,
+						update_in_insert = false,
+					})
+
+					vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
+					 {silent = true, noremap = true}
+					)
 				end
 			}
 		'';

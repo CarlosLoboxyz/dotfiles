@@ -178,6 +178,9 @@
 		};
 		programs.lazygit = {
 			enable = true;
+			# settings = {
+			# 	notARepository = "skip";
+			# };
 		};
 		xdg.dataFile."scripts/odoo-scaffold" = {
 			enable = true;
@@ -259,8 +262,10 @@
 		})
 		youtube-music
 		blender
+		freecad
 		ardour
 		insomnia
+		postman
 		ripgrep
 		compose2nix
 		lazygit

@@ -98,6 +98,7 @@
 				# Popups
 				bind-key -n M-m display-popup -E "ncmpcpp"
 				bind-key -n M-M display-popup -E "neomutt"
+				bind-key -n M-L display-popup -d "#{pane_current_path}" -h 50 -E "lazygit"
 				bind-key -n M-t run-shell "~/.config/tmux/scripts/launcher.sh"
 
 				# Persistence popups
