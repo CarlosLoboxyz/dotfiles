@@ -1,0 +1,20 @@
+
+{	
+	"ViewInherit": {
+		"prefix": "view",
+		"body": [
+			"<odoo>",
+			"\t<record id=\"$1\" model=\"ir.ui.view\">",
+			"\t\t<field name=\"name\">$2</field>",
+			"\t\t<field name=\"model\">$3</field>",
+			"\t\t<field name=\"inherit_id\" ref=\"$4\"/>",
+			"\t\t<field name=\"arch\" type=\"xml\">",
+			"\t\t\t<xpath expr=\"$5\" position=\"$6\">",
+			"\t\t\t</xpath>",
+			"\t\t</field>",
+			"\t</record>",
+			"</odoo>"
+		]
+	}
+}
+

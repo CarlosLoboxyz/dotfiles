@@ -1,0 +1,4 @@
+#!/bin/sh
+
+docker compose exec odoo odoo scaffold $1 /tmp
+docker compose cp odoo:/tmp/$1 $2
