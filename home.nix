@@ -144,6 +144,8 @@ in
   # NEOVIM CONFIGURATIONS AND PLUGINS
   programs.neovim = {
     enable = true;
+    viAlias = true;
+    vimAlias = true;
     plugins = with pkgs.vimPlugins; [
       undotree
       lazy-nvim
