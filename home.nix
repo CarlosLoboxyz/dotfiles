@@ -127,9 +127,11 @@ in
   programs.gh.enable = true;
   programs.git = {
     enable = true;
-    userName = "Carlos Lobo";
-    userEmail = "86011416+CarlosLoboxyz@users.noreply.github.com";
-    extraConfig = {
+    user = {
+      name = "Carlos Lobo";
+      email = "86011416+CarlosLoboxyz@users.noreply.github.com";
+    };
+    settings = {
       init.defaultBranch = "master";
     };
   };
