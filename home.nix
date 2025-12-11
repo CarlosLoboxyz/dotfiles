@@ -127,12 +127,12 @@ in
   programs.gh.enable = true;
   programs.git = {
     enable = true;
-    user = {
-      name = "Carlos Lobo";
-      email = "86011416+CarlosLoboxyz@users.noreply.github.com";
-    };
     settings = {
       init.defaultBranch = "master";
+      user = {
+        name = "Carlos Lobo";
+        email = "86011416+CarlosLoboxyz@users.noreply.github.com";
+      };
     };
   };
   programs.lazygit = {
