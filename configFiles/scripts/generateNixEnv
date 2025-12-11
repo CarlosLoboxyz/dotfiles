@@ -4,14 +4,16 @@ printf "use nix" > .envrc
 printf "{ pkgs ? import <nixpkgs> {} }:
 
 pkgs.mkShell {
-	# nodejs_24
-	# nodejs_22
+	buildInputs = with pkgs; [
+		# nodejs_24
+		# nodejs_22
 
-	# python314
-	# python2
+		# python314
+		# python2
 
-	# go
-	# air
+		# go
+		# air
+	];
 }
 " > shell.nix
 

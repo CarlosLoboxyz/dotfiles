@@ -207,7 +207,9 @@
     arduino-ide
     arduino-cli
     compose2nix
+
     lazygit
+    act
 
     dua
     unzip
@@ -232,6 +234,7 @@
     unrar
     usbutils
     mpv
+    brave
 
     vscode
     zed-editor
@@ -335,7 +338,10 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-  programs.ssh.enableAskPassword = true;
+  programs.ssh = {
+    enableAskPassword = true;
+    startAgent = true;
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
