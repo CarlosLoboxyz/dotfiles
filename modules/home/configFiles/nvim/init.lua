@@ -25,28 +25,21 @@ vim.opt.updatetime = 300
 
 vim.g.mapleader = " "
 
--- 1. Load Plugins
-require("lazy").setup({
-	checker = { enabled = true, notify = false },
-	spec = {
-		{ import = "plugins" },
-	},
-	performance = {
-		reset_packpath = false,
-		rtp = {
-			reset = false,
-		},
-	},
-	dev = {
-		path = "@packPath@/pack/myNeovimPackages/start",
-		patterns = { "" },
-	},
-	install = {
-		missing = false,
-	},
-})
-
 require("config.keybindings")
+require("plugins.gruvbox")
+require("plugins.treesitter")
+require("plugins.lsp")
+require("plugins.telescope")
+require("plugins.gitsigns")
+require("plugins.neotree")
+require("plugins.snacks")
+require("plugins.minipairs")
+require("plugins.minisnippets")
+require("plugins.undotree")
+require("plugins.icons")
+require("plugins.trouble-nvim")
+require("plugins.dropbar")
+require("plugins.commentstring")
 
 local servers = {
 	"jedi_language_server",
@@ -64,7 +57,6 @@ for _, server in ipairs(servers) do
 	vim.lsp.enable(server)
 end
 
--- 3. Completion Setup
 local cmp = require("cmp")
 cmp.setup({
 	sources = {

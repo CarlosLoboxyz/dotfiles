@@ -1,5 +1,1 @@
-return {
-	"Bekaboo/dropbar.nvim",
-	config = function()
-	end
-}
+require("dropbar").setup({})

@@ -1,11 +1,5 @@
-return {
-	"folke/snacks.nvim",
-	priority = 1000,
-	lazy = false,
-	opts = {
-		indent = { enabled = true },
-		-- statuscolumn = { enabled = true },
-		dim = { enabled = true },
-		words = { enabled = false },
-	},
-}
+require("snacks").setup({
+	indent = { enabled = true },
+	dim = { enabled = true },
+	words = { enabled = false },
+})

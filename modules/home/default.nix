@@ -1,4 +1,3 @@
-
 { config, pkgs, ... }:
 
 let
@@ -146,9 +145,36 @@ in
   };
 
   programs.neovim = {
-  	enable = true;
-	viAlias = true;
-	vimAlias = true;
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    plugins = with pkgs.vimPlugins; [
+      conform-nvim
+      telescope-nvim
+      plenary-nvim
+
+      gruvbox-nvim
+      nvim-web-devicons
+
+      nvim-lspconfig
+      nvim-treesitter.withAllGrammars
+      nvim-ts-context-commentstring
+      nvim-treesitter-textobjects
+
+      nvim-cmp
+      cmp-nvim-lsp
+
+      neo-tree-nvim
+      nvim-web-devicons
+    ];
+
+		extraPackages = with pkgs; [
+			lua-language-server
+			nil
+			gopls
+			prettierd
+			stylua
+		];
   };
 
   # NEOVIM CONFIGURATIONS AND PLUGINS
@@ -207,24 +233,25 @@ in
   #     prettier-plugin-svelte
   #   ];
   # };
-  # xdg.configFile = {
-  #   "nvim/init.lua".source = pkgs.replaceVars "${dotfiles}/nvim/init.lua" {
-  #     packPath = myPackPath;
-  #   };
-  #   "nvim/lua/config/keybindings.lua".source = "${dotfiles}/nvim/keybindings.lua";
-  #   "nvim/snippets" = {
-  #     source = "${dotfiles}/nvim/snippets";
-  #     recursive = true;
-  #   };
-  #   "nvim/lua/plugins" = {
-  #     source = "${dotfiles}/nvim/plugins";
-  #     recursive = true;
-  #   };
-  #   "nvim/lua/plugins/conform-nvim.lua".source =
-  #     pkgs.replaceVars "${dotfiles}/nvim/templates/conform-nvim.lua"
-  #       {
-  #         prettierSvelte = "${pkgs.prettier-plugin-svelte}/lib/node_modules/prettier-plugin-svelte/plugin.js";
-  #         nodePath = "${pkgs.prettier}/lib/node_modules:${pkgs.svelte}/lib/node_modules";
-  #       };
-  # };
+  xdg.configFile = {
+    "nvim/init.lua".source = "${dotfiles}/nvim/init.lua";
+    #   "nvim/init.lua".source = pkgs.replaceVars "${dotfiles}/nvim/init.lua" {
+    #     packPath = myPackPath;
+    #   };
+    "nvim/lua/config/keybindings.lua".source = "${dotfiles}/nvim/keybindings.lua";
+    "nvim/snippets" = {
+      source = "${dotfiles}/nvim/snippets";
+      recursive = true;
+    };
+    "nvim/lua/plugins" = {
+      source = "${dotfiles}/nvim/plugins";
+      recursive = true;
+    };
+    #   "nvim/lua/plugins/conform-nvim.lua".source =
+    #     pkgs.replaceVars "${dotfiles}/nvim/templates/conform-nvim.lua"
+    #       {
+    #         prettierSvelte = "${pkgs.prettier-plugin-svelte}/lib/node_modules/prettier-plugin-svelte/plugin.js";
+    #         nodePath = "${pkgs.prettier}/lib/node_modules:${pkgs.svelte}/lib/node_modules";
+    #       };
+  };
 }
