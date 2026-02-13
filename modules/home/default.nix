@@ -166,15 +166,24 @@ in
 
       neo-tree-nvim
       nvim-web-devicons
-    ];
 
-		extraPackages = with pkgs; [
-			lua-language-server
-			nil
-			gopls
-			prettierd
-			stylua
+      snacks-nvim
+			conform-nvim
+			gitsigns-nvim
+			mini-pairs
+      trouble-nvim
+      dropbar-nvim
+
+			vim-svelte
 		];
+
+    extraPackages = with pkgs; [
+      lua-language-server
+      nil
+      gopls
+      prettierd
+      stylua
+    ];
   };
 
   # NEOVIM CONFIGURATIONS AND PLUGINS
